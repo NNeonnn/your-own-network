@@ -8,7 +8,7 @@ import numpy as np
 #tf.config.set_visible_devices(tf.config.list_physical_devices('GPU'), 'GPU')
 #print(f"TensorFlow version: {tf.__version__}")
 #print(f"Cuda version: {tf.test.gpu_device_name()}")
-bot = telebot.TeleBot("6727812890:AAFIYjIm-HBntAI9q1POQ6KV1gXLyy6GzHM")
+bot = telebot.TeleBot("Your Telegram Bot Token")
 
 
 with open('settings.pkl', 'rb') as file:
