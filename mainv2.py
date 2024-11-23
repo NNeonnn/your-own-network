@@ -5,6 +5,9 @@ from keras.layers import Dense
 from keras.preprocessing.text import Tokenizer
 import pandas as pd
 import numpy as np
+#tf.config.set_visible_devices(tf.config.list_physical_devices('GPU'), 'GPU')
+#print(f"TensorFlow version: {tf.__version__}")
+#print(f"Cuda version: {tf.test.gpu_device_name()}")
 bot = telebot.TeleBot("Your Telegram Bot Token")
 
 
