@@ -166,6 +166,8 @@ def handle_document(message):
                 bot.reply_to(message, "Файл обрабатывается")
 
                 df = pd.read_csv(names[now[message.chat.id]]+'.csv')
+                df = df.dropna(how='all')
+                df.reset_index(drop=True, inplace=True)
                 for col in df.columns:
                     pct_missing = np.mean(df[col].isnull())
                     print('{} - {}%'.format(col, round(pct_missing * 100)))
@@ -210,6 +212,7 @@ def handle_document(message):
                         k += 1
 
                 inp = np.array(inp).astype(np.float32)
+                print((inp))
                 # С данными покончено!!!!
                 model = tf.keras.models.load_model(f"{names[now[message.chat.id]]}.h5")
                 pred = model.predict(inp)
@@ -302,6 +305,10 @@ def handle_document(message):
             bot.reply_to(message, "Файл обрабатывается")
 
             df = pd.read_csv(names[now[message.chat.id]]+'.csv')
+            print(df, "find this")
+            df = df.dropna(how='all')
+            df.reset_index(drop=True, inplace=True)
+            print(df)
             for col in df.columns:
                 pct_missing = np.mean(df[col].isnull())
                 if str(pct_missing) != 'nan':
