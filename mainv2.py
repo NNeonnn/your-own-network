@@ -500,6 +500,8 @@ def handle_document(message):
                     _2 = 0
                     lastM = bot.send_message(message.chat.id, f'{round(i / ep * 100, 1)}%').message_id
                 history = model.fit(x=inp, y=out, batch_size=len(inp) // 32 + 1, epochs=1)
+                if sum(history.history['loss']) / len(history.history['loss']) < 0.06:
+                    break
             bot.delete_message(chat_id=message.chat.id, message_id=lastM)
 
             model.save(names[now[message.chat.id]]+".h5") # модель сохранена
