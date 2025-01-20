@@ -80,8 +80,8 @@ def repeat(message):
     global now
 
     if steps[message.chat.id] == 1:
-        if message.text + str(message.chat.id) in names:
-            now[message.chat.id] = names.index(message.text + str(message.chat.id))
+        if message.text in names:
+            now[message.chat.id] = names.index(message.text)
             bot.send_message(message.chat.id, 'Теперь отправте .csv файл таблицы со всеми признаками для получения ответов')
             steps[message.chat.id] = 2
         else:
@@ -93,11 +93,11 @@ def repeat(message):
 
     if steps[message.chat.id] == -10:
         print(names)
-        if message.text + str(message.chat.id) in names:
+        if message.text in names:
             bot.send_message(message.chat.id, 'Это название уже занято')
         else:
-            names += [message.text + str(message.chat.id)]
-            now[message.chat.id] = names.index(message.text + str(message.chat.id))
+            names += [message.text]
+            now[message.chat.id] = names.index(message.text)
             steps[message.chat.id] = -14
             # bot.send_message(message.chat.id, 'Теперь вы должны перечислить информацию, с помощью которой нейросеть предсказывает ответ, а нет - хуй вам!!!!')
             bot.send_message(message.chat.id, '''теперь сдлелайте .csv файл в таком формате:
@@ -108,8 +108,8 @@ def repeat(message):
 
 
     if steps[message.chat.id] == 99:
-        if message.text + str(message.chat.id) in names:
-            now[message.chat.id] = names.index(message.text + str(message.chat.id))
+        if message.text in names:
+            now[message.chat.id] = names.index(message.text)
             a = settings_in[now[message.chat.id]]
             b = settings_out[now[message.chat.id]]
             a1 = ''
