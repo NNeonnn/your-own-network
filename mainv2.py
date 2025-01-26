@@ -272,7 +272,7 @@ def handle_document(message):
 
                 bot.send_message(message.chat.id, 'Результаты предсказаний в этом файле')
                 print(pred)
-            except IndexError and pd.errors.ParserError:
+            except IndexError and pd.errors.ParserError and ValueError:
                 bot.send_message(message.chat.id,
                                  'Неправильные данные в .csv')
 
