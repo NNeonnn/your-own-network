@@ -196,8 +196,8 @@ def handle_document(message):
 
                 with open(f'{names[now[message.chat.id]]}.pickle', 'rb') as handle:
                     tokenizer = pickle.load(handle)
-                _1 = tokenizer.texts_to_matrix('aa').tolist()
-                print(_1, len(_1))
+                #_1 = tokenizer.texts_to_matrix('aa').tolist()
+                #print(_1, len(_1))
                 inp = []
                 for i in range(len(df)):
                     inp += [[]]
@@ -227,10 +227,10 @@ def handle_document(message):
                 k = 0
                 #print(settings_out[now[message.chat.id]], "@@@@@", len(df), len(df[col]), col)
                 for i in settings_out[now[message.chat.id]]:
-                    try:
-                        e = settings_out[now[message.chat.id]][k*2+1]
-                    except IndexError:
-                        break
+                    #try:
+                    #    e = settings_out[now[message.chat.id]][k*2+1]
+                    #except IndexError:
+                    #    break
                     print(k)
                     if k % 2 == 0:
                         if i == 1:
@@ -241,14 +241,16 @@ def handle_document(message):
                             #print(x,len(x))
                             p = ['']
                             m = 0
+                            len_tok = len(tokenizer.texts_to_matrix('a')[0])
+                            print(tokenizer.word_index, '12345')
                             #print(len(u))
                             for x in pred:
                                 print(len(x), x, 'there')
-                                for j in range(1, len(x)//100 + 1):
+                                for j in range(1, len(x)//len_tok + 1):
                                     #print(np.array([x[:j * 100][0]]), 'sgrsgr', x[:j * 100])
                                     #print(tokenizer.index_word[np.array(x[:j * 100]).astype(np.float32).argmax(axis=1)[0]])
                                     #print(np.array(x[(j - 1) * 100:j * 100]))
-                                    index = int(tf.argmax(np.array(x[(j - 1) * 100:j * 100])))
+                                    index = int(tf.argmax(np.array(x[(j - 1) * len_tok:j * len_tok])))
                                     try:
                                         print(tokenizer.index_word[index])
                                         p[m] += tokenizer.index_word[index]
@@ -404,8 +406,8 @@ def handle_document(message):
                 text = ''
                 for i in texts:
                     text += i
-                tokenizer = Tokenizer(num_words=len(text), char_level=True)
-                tokenizer.fit_on_texts(text + ' MB')
+                tokenizer = Tokenizer(num_words=len(set(text)), char_level=True)
+                tokenizer.fit_on_texts(text + 'a')
                 print(text,'fds')
 
     #            print(len(tokenizer.texts_to_matrix(df['Name'][0]).tolist()[1]))
@@ -434,10 +436,11 @@ def handle_document(message):
                         elif r:
                             ss = tokenizer.texts_to_matrix(str(df[col][i])[:settings_in[now[message.chat.id]][k * 2 + 1] + 1] + ' ' * (
                                         settings_in[now[message.chat.id]][k * 2 + 1] - len(str(df[col][i])))).tolist()
-                            #print(ss, 'wow')
+                            #print(len(ss), 'wow')
                             sss = []
                             for j in ss:
                                 sss += j
+
                             inp[i] += sss
                             #print(str(df[col][i])[:settings_in[now[message.chat.id]][k * 2 + 1] + 1] + ' ' * (
                             #            settings_in[now[message.chat.id]][k * 2 + 1] - len(str(df[col][i]))))
@@ -457,11 +460,16 @@ def handle_document(message):
                             out[i] += sss
                         k += 1
                 #test
+                print(len(inp[0]), len(out[0]), 'wow')
+                len_out = len(out[0])
+                print(len_out)
                 data = np.column_stack((inp, out))
                 np.random.shuffle(data)
-                inp = data[:, :-1]
-                out = data[:, -1:]
+                inp = data[:, :-len_out]
+                out = data[:, -len_out:]
                 #test
+                print(len(inp[0]), len(out[0]), 'wow')
+                print(out[0])
                 #m = 1/0
                 inp = np.array(inp).astype(np.float64)
                 out = np.array(out)
@@ -480,7 +488,7 @@ def handle_document(message):
                     if min(i) < mi:
                         mi = min(i)
                 stepp = (ma - mi) / 10000
-                if stepp > 0.002:
+                if stepp > 0.1:
                     stepp = 0.1
                 if len(inp[0]) < 100:
                     ep = 500
@@ -492,7 +500,7 @@ def handle_document(message):
                     ep = 50
                 else:
                     ep = 20
-                print(stepp)
+                print(stepp, ep)
 
                 model.compile(loss='mean_squared_error', optimizer=tf.keras.optimizers.Adam(stepp))
                 _2 = 0
@@ -505,8 +513,8 @@ def handle_document(message):
                         _2 = 0
                         lastM = bot.send_message(message.chat.id, f'{round(i / ep * 100, 1)}%').message_id
                     history = model.fit(x=inp, y=out, batch_size=len(inp) // 32 + 1, epochs=1)
-                    if sum(history.history['loss']) / len(history.history['loss']) < 0.06:
-                        break
+                    #if sum(history.history['loss']) / len(history.history['loss']) < 0.06:
+                    #    break
                 bot.delete_message(chat_id=message.chat.id, message_id=lastM)
 
                 model.save(names[now[message.chat.id]]+".h5") # модель сохранена
