@@ -477,7 +477,7 @@ def handle_document(message):
                 #m = 1/0
                 # С данными покончено!!!!
                 model = tf.keras.Sequential()
-                model.add(Dense((len(inp[0]) + len(out[0])) // 2 + 1, use_bias=True))
+                model.add(Dense((len(inp[0]) + len(out[0])) // 2 + 1, use_bias=True, activation='relu'))
                 model.add(Dense(len(out[0])))
                 ma = -99999
                 mi = 99999
